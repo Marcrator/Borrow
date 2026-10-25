@@ -198,11 +198,6 @@ function seedData() {
 }
 
 
-  if (!localStorage.getItem(STORAGE.requests)) {
-    save(STORAGE.requests, []);
-  }
-}
-
 function findUserById(id) {
   return users().find(user => user.id === id);
 }
