@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equipment Borrowing and Return Management System</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <nav class="view-nav" id="viewNav">
+    <span class="view-nav-title">Equipment System</span>
+    <button class="nav-btn active" data-view="loginView"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
+    <button class="nav-btn" data-view="signupView"><i class="fa-solid fa-user-plus"></i> Sign Up</button>
+    <button class="nav-btn" data-view="userDashView"><i class="fa-solid fa-user"></i> User Dashboard</button>
+    <button class="nav-btn" data-view="adminDashView"><i class="fa-solid fa-user-shield"></i> Admin Dashboard</button>
+  </nav>
+
+  <!-- LOGIN -->
+  <div id="loginView" class="view-screen active">
+    <div class="auth-card">
+      <div class="auth-hero">
+        <div class="hero-brand">
+          <div class="brand-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+          <h1>Equipment Borrowing and Return Management System</h1>
+        </div>
+        <p class="hero-tagline">Borrow. Use. Return.</p>
+        <p class="hero-subtext">Easily request, track, and return school equipment — all in one place.</p>
+        <div class="hero-icons">
+          <i class="fa-solid fa-laptop"></i>
+          <i class="fa-solid fa-camera"></i>
+          <i class="fa-solid fa-video"></i>
+          <i class="fa-solid fa-icons"></i>
+        </div>
+      </div>
+
+      <div class="auth-form-container">
+        <h2>Welcome Back!</h2>
+        <p class="subtitle">Log in to your account</p>
+
+        <div class="role-selector">
+          <label class="role-option">
+            <input type="radio" name="loginRole" value="student" checked>
+            <span class="role-btn"><i class="fa-solid fa-user"></i> Student / Faculty</span>
+          </label>
+          <label class="role-option">
+            <input type="radio" name="loginRole" value="admin">
+            <span class="role-btn"><i class="fa-solid fa-shield-halved"></i> Admin</span>
+          </label>
+        </div>
+
+        <form id="loginForm">
+          <div class="input-group">
+            <i class="fa-regular fa-user input-icon"></i>
+            <input type="text" id="loginEmail" placeholder="Email or Username" autocomplete="username" required>
+          </div>
+
+          <div class="input-group">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" required>
+            <button type="button" class="toggle-pwd" data-toggle="loginPassword" aria-label="Show password">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+
+          <div class="form-row">
+            <label class="checkbox-container">
+              <input type="checkbox" id="rememberMe"> Remember me
+            </label>
+            <a href="#" id="forgotLink" class="forgot-link">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">Log In</button>
+        </form>
+
+        <div class="divider"><span>or</span></div>
+
+        <button type="button" class="btn btn-outline btn-block" data-go="signupView">
+          <i class="fa-regular fa-user"></i> Create an Account
+        </button>
+
+        <p class="auth-footer">Don't have an account? <a href="#" data-go="signupView">Sign up</a></p>
+        <p class="demo-note">Demo admin: <strong>admin</strong> / <strong>admin123</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIGN UP -->
+  <div id="signupView" class="view-screen">
+    <div class="auth-card">
+      <div class="auth-hero">
+        <div class="hero-brand">
+          <div class="brand-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+          <h1>Equipment Borrowing and Return Management System</h1>
+        </div>
+        <p class="hero-tagline">Borrow. Use. Return.</p>
+        <p class="hero-subtext">Easily request, track, and return school equipment — all in one place.</p>
+        <div class="hero-icons">
+          <i class="fa-solid fa-laptop"></i>
+          <i class="fa-solid fa-camera"></i>
+          <i class="fa-solid fa-video"></i>
+          <i class="fa-solid fa-icons"></i>
+        </div>
+      </div>
+
+      <div class="auth-form-container">
+        <h2>Create Your Account</h2>
+        <p class="subtitle">Join us and start borrowing equipment!</p>
+
+        <form id="signupForm">
+          <div class="input-group">
+            <i class="fa-regular fa-user input-icon"></i>
+            <input id="signupName" type="text" placeholder="Full Name" autocomplete="name" required>
+          </div>
+
+          <div class="input-group">
+            <i class="fa-regular fa-envelope input-icon"></i>
+            <input id="signupEmail" type="email" placeholder="Email" autocomplete="email" required>
+          </div>
+
+          <div class="input-group">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input id="signupPassword" type="password" placeholder="Password (at least 6 characters)" autocomplete="new-password" minlength="6" required>
+            <button type="button" class="toggle-pwd" data-toggle="signupPassword" aria-label="Show password">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+
+          <div class="input-group">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input id="confirmPassword" type="password" placeholder="Confirm Password" autocomplete="new-password" required>
+            <button type="button" class="toggle-pwd" data-toggle="confirmPassword" aria-label="Show password">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+
+          <div class="radio-group-container">
+            <label class="group-label">Account Type</label>
+            <div class="radio-options">
+              <label><input type="radio" name="accountType" value="student" checked> Student</label>
+              <label><input type="radio" name="accountType" value="faculty"> Faculty / Staff</label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+        </form>
+
+        <p class="auth-footer" style="margin-top:25px">
+          Already have an account? <a href="#" data-go="loginView">Log in</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- USER DASHBOARD -->
+  <div id="userDashView" class="view-screen">
+    <div class="dashboard-layout">
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <span>Equipment Borrowing and Return System</span>
+        </div>
+
+        <ul class="sidebar-menu">
+          <li class="active"><a href="#" data-user-section="dashboard"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+          <li><a href="#" data-user-section="equipment"><i class="fa-solid fa-box-archive"></i> Browse Equipment</a></li>
+          <li><a href="#" data-user-section="requests"><i class="fa-solid fa-file-lines"></i> My Requests</a></li>
+          <li><a href="#" data-user-section="history"><i class="fa-solid fa-clock-rotate-left"></i> Borrowing History</a></li>
+          <li><a href="#" data-user-section="profile"><i class="fa-regular fa-user"></i> Profile</a></li>
+        </ul>
+
+        <div class="sidebar-footer">
+          <a href="#" id="userLogout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+        </div>
+      </aside>
+
+      <main class="dash-main">
+        <header class="dash-header">
+          <button class="menu-toggle" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
+
+          <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="search" id="userSearch" placeholder="Search equipment...">
+          </div>
+
+          <div class="user-profile">
+            <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+            <div class="user-info">
+              <span class="name" id="userHeaderName">Student</span>
+              <span class="role" id="userHeaderRole">Student</span>
+            </div>
+          </div>
+        </header>
+
+        <div class="dash-content">
+          <section class="user-section" id="userDashboardSection">
+            <div class="welcome-banner">
+              <div>
+                <h2 id="welcomeHeading">Hello! 👋</h2>
+                <p>Welcome to the Equipment Borrowing and Return System.</p>
+              </div>
+              <div class="welcome-img"><i class="fa-solid fa-laptop-file"></i></div>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-icon green"><i class="fa-solid fa-boxes-stacked"></i></div>
+                <div class="stat-info">
+                  <span class="stat-label">Available Equipment</span>
+                  <span class="stat-number" id="userAvailCount">36</span>
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-icon blue"><i class="fa-solid fa-paper-plane"></i></div>
+                <div class="stat-info">
+                  <span class="stat-label">My Active Requests</span>
+                  <span class="stat-number" id="userActiveCount">0</span>
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-icon purple"><i class="fa-solid fa-history"></i></div>
+                <div class="stat-info">
+                  <span class="stat-label">Borrowing History</span>
+                  <span class="stat-number" id="userHistoryCount">0</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="user-section" id="equipmentSection">
+            <div class="section-header">
+              <h3>Available Equipment</h3>
+              <span class="small-muted">Select an item to submit a request</span>
+            </div>
+            <div class="equipment-grid" id="equipmentGrid"></div>
+            <p id="noEquipmentMessage" class="empty-state hidden">No equipment matches your search.</p>
+          </section>
+
+          <section class="user-section hidden" id="requestsSection">
+            <div class="section-header"><h3>My Requests</h3></div>
+            <div class="table-card">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr><th>Equipment</th><th>Borrow Date</th><th>Return Date</th><th>Purpose</th><th>Status</th><th>Action</th></tr>
+                  </thead>
+                  <tbody id="myRequestsBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="user-section hidden" id="historySection">
+            <div class="section-header"><h3>Borrowing History</h3></div>
+            <div class="table-card">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr><th>Equipment</th><th>Borrow Date</th><th>Return Date</th><th>Status</th><th>Returned On</th></tr>
+                  </thead>
+                  <tbody id="historyBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="user-section hidden" id="profileSection">
+            <div class="table-card profile-card">
+              <h3>My Profile</h3>
+              <p><strong>Name:</strong> <span id="profileName"></span></p>
+              <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+              <p><strong>Account Type:</strong> <span id="profileRole"></span></p>
+              <p class="small-muted">This demo stores account information in this browser only.</p>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD -->
+  <div id="adminDashView" class="view-screen">
+    <div class="dashboard-layout">
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <span>Equipment Borrowing and Return System</span>
+        </div>
+
+        <ul class="sidebar-menu">
+          <li class="active"><a href="#" data-admin-section="dashboard"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+          <li><a href="#" data-admin-section="equipment"><i class="fa-solid fa-boxes-stacked"></i> Manage Equipment</a></li>
+          <li><a href="#" data-admin-section="requests"><i class="fa-solid fa-clipboard-list"></i> Borrowing Requests <span class="badge-count" id="pendingBadge">0</span></a></li>
+          <li><a href="#" data-admin-section="returns"><i class="fa-solid fa-rotate-left"></i> Return Records</a></li>
+          <li><a href="#" data-admin-section="users"><i class="fa-solid fa-users"></i> Users</a></li>
+          <li><a href="#" data-admin-section="reports"><i class="fa-solid fa-chart-line"></i> Reports</a></li>
+        </ul>
+
+        <div class="sidebar-footer">
+          <a href="#" id="adminLogout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+        </div>
+      </aside>
+
+      <main class="dash-main">
+        <header class="dash-header">
+          <button class="menu-toggle" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
+          <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="search" id="adminSearch" placeholder="Search requests...">
+          </div>
+          <div class="user-profile">
+            <div class="user-avatar admin-avatar"><i class="fa-solid fa-user-shield"></i></div>
+            <div class="user-info">
+              <span class="name" id="adminHeaderName">Admin</span>
+              <span class="role">Administrator</span>
+            </div>
+          </div>
+        </header>
+
+        <div class="dash-content">
+          <section class="admin-section" id="adminDashboardSection">
+            <h2 class="page-title">Dashboard</h2>
+
+            <div class="admin-stats-grid">
+              <div class="admin-stat-card">
+                <div class="admin-stat-icon blue"><i class="fa-solid fa-box"></i></div>
+                <div><span class="label">Total Equipment</span><span class="val" id="totalEquipmentStat">36</span></div>
+              </div>
+              <div class="admin-stat-card">
+                <div class="admin-stat-icon green"><i class="fa-solid fa-hand-holding"></i></div>
+                <div><span class="label">Borrowed Units</span><span class="val" id="borrowedStat">0</span></div>
+              </div>
+              <div class="admin-stat-card">
+                <div class="admin-stat-icon yellow"><i class="fa-solid fa-hourglass-half"></i></div>
+                <div><span class="label">Pending Requests</span><span class="val" id="pendingStat">0</span></div>
+              </div>
+              <div class="admin-stat-card">
+                <div class="admin-stat-icon red"><i class="fa-solid fa-circle-exclamation"></i></div>
+                <div><span class="label">Overdue Requests</span><span class="val" id="overdueStat">0</span></div>
+              </div>
+            </div>
+
+            <div class="charts-grid">
+              <div class="chart-card">
+                <h3>Equipment Status (Units)</h3>
+                <div class="donut-chart-wrapper"><canvas id="statusChart"></canvas></div>
+              </div>
+              <div class="chart-card">
+                <h3>Borrowing Trends (Requests by Month)</h3>
+                <div class="line-chart-wrapper"><canvas id="trendsChart"></canvas></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="admin-section hidden" id="adminRequestsSection">
+            <div class="section-header"><h3>Borrowing Requests</h3></div>
+            <div class="table-card">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr><th>User</th><th>Equipment</th><th>Request Date</th><th>Borrow / Return</th><th>Status</th><th>Action</th></tr>
+                  </thead>
+                  <tbody id="requestsTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="admin-section hidden" id="adminEquipmentSection">
+            <div class="section-header"><h3>Manage Equipment</h3></div>
+            <div class="table-card">
+              <form id="equipmentForm" class="inline-form">
+                <input id="newEquipmentName" placeholder="Equipment name" required maxlength="60">
+                <input id="newEquipmentUnits" type="number" min="1" max="999" placeholder="Total units" required>
+                <button class="btn btn-primary" type="submit">Add Equipment</button>
+              </form>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead><tr><th>Equipment</th><th>Total Units</th><th>Available</th><th>Borrowed</th><th>Action</th></tr></thead>
+                  <tbody id="adminEquipmentBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="admin-section hidden" id="adminReturnsSection">
+            <div class="section-header"><h3>Return Records</h3></div>
+            <div class="table-card">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead><tr><th>User</th><th>Equipment</th><th>Borrow Date</th><th>Return Date</th><th>Returned On</th></tr></thead>
+                  <tbody id="returnsBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="admin-section hidden" id="adminUsersSection">
+            <div class="section-header"><h3>Registered Users</h3></div>
+            <div class="table-card">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead><tr><th>Name</th><th>Email</th><th>Account Type</th><th>Joined</th></tr></thead>
+                  <tbody id="usersBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="admin-section hidden" id="adminReportsSection">
+            <div class="section-header">
+              <h3>Reports</h3>
+              <button class="btn btn-outline" id="exportCsvBtn"><i class="fa-solid fa-download"></i> Export requests CSV</button>
+            </div>
+            <div class="table-card">
+              <p id="reportSummary"></p>
+              <p class="small-muted">CSV export includes borrowing request details and status.</p>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- BORROWING REQUEST MODAL -->
+  <div id="borrowModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalEquipmentTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalEquipmentTitle">Borrow Equipment</h3>
+        <button class="modal-close" type="button" data-close="borrowModal" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="borrowForm">
+          <input type="hidden" id="modalEquipmentId">
+          <div class="form-group">
+            <label for="modalEquipmentInput">Equipment Name</label>
+            <input type="text" id="modalEquipmentInput" readonly>
+          </div>
+          <div class="form-group">
+            <label for="borrowPurpose">Purpose</label>
+            <textarea id="borrowPurpose" rows="3" placeholder="State reason for borrowing..." maxlength="500" required></textarea>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="borrowDate">Borrow Date</label>
+              <input id="borrowDate" type="date" required>
+            </div>
+            <div class="form-group">
+              <label for="returnDate">Return Date</label>
+              <input id="returnDate" type="date" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Submit Request</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN REVIEW MODAL -->
+  <div id="adminModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="adminModalTitle">Review Borrowing Request</h3>
+        <button class="modal-close" type="button" data-close="adminModal" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>User:</strong> <span id="adminModalUser"></span></p>
+        <p><strong>Item:</strong> <span id="adminModalItem"></span></p>
+        <p><strong>Purpose:</strong> <span id="adminModalPurpose"></span></p>
+        <p><strong>Borrow date:</strong> <span id="adminModalBorrow"></span></p>
+        <p><strong>Return date:</strong> <span id="adminModalReturn"></span></p>
+        <p><strong>Status:</strong> <span id="adminModalStatus"></span></p>
+        <div class="modal-actions">
+          <button class="btn btn-success" id="approveBtn" type="button">Approve</button>
+          <button class="btn btn-danger" id="rejectBtn" type="button">Reject</button>
+          <button class="btn btn-primary hidden" id="markReturnedBtn" type="button">Mark Returned</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastRegion" class="toast-region" aria-live="polite"></div>
+  <footer class="app-footer">Equipment Borrowing and Return Management System · Frontend demo using browser storage</footer>
+</body>
+</html>
