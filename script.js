@@ -1,7 +1,8 @@
 "use strict";
 
 /*
- * FRONTEND DEMO ONLY:
+ * EQUIPMENT BORROWING AND RETURN MANAGEMENT SYSTEM
+ * FRONTEND DEMO ONLY
  * Data is stored in this browser's localStorage.
  * Demo administrator: admin / admin123
  */
@@ -17,30 +18,30 @@ const DEFAULT_EQUIPMENT = [
   {
     id: "eq-laptop",
     name: "Laptop",
-    total: 15,
+    total: 100,
     icon: "fa-laptop",
-    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&auto=format&fit=crop&q=80"
+    image: "./image/laptop.jpg"
   },
   {
     id: "eq-projector",
     name: "Projector",
     total: 8,
-    icon: "fa-video-projector",
-    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500&auto=format&fit=crop&q=80"
+    icon: "fa-video",
+    image: "./image/projector.jpg"
   },
   {
     id: "eq-camera",
     name: "Camera",
     total: 3,
     icon: "fa-camera",
-    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500&auto=format&fit=crop&q=80"
+    image: "./image/camera.jpg"
   },
   {
     id: "eq-tripod",
     name: "Tripod",
     total: 10,
     icon: "fa-camera-retro",
-    image: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=500&auto=format&fit=crop&q=80"
+    image: "./image/tripod.jpg"
   }
 ];
 
@@ -54,6 +55,8 @@ let activeAdminSection = "dashboard";
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) =>
   Array.from(root.querySelectorAll(selector));
+
+/* STORAGE FUNCTIONS */
 
 function safeParse(key, fallback) {
   try {
@@ -98,6 +101,8 @@ function setEquipment(value) {
 function setRequests(value) {
   return save(STORAGE.requests, value);
 }
+
+/* GENERAL HELPERS */
 
 function uid(prefix) {
   return prefix + "-" + Date.now().toString(36) + "-" +
@@ -145,7 +150,6 @@ function toast(message, type = "success") {
   const node = document.createElement("div");
   node.className = `toast ${type}`;
   node.textContent = message;
-
   region.appendChild(node);
 
   window.setTimeout(() => node.remove(), 3500);
@@ -153,11 +157,30 @@ function toast(message, type = "success") {
 
 /* INITIAL DATA */
 
-
 function seedData() {
-  if (!localStorage.getItem(STORAGE.equipment)) {
-    save(STORAGE.equipment, DEFAULT_EQUIPMENT);
-  }
+  /*
+   * Sync code-defined equipment with saved equipment.
+   * Default equipment fields (name, total, icon, image)
+   * follow DEFAULT_EQUIPMENT.
+   * Admin-added equipment is preserved.
+   */
+  const savedEquipment = safeParse(STORAGE.equipment, []);
+  const defaultIds = new Set(DEFAULT_EQUIPMENT.map(item => item.id));
+
+  const syncedDefaults = DEFAULT_EQUIPMENT.map(defaultItem => {
+    const existing = savedEquipment.find(item => item.id === defaultItem.id);
+
+    return {
+      ...existing,
+      ...defaultItem
+    };
+  });
+
+  const customEquipment = savedEquipment.filter(
+    item => !defaultIds.has(item.id)
+  );
+
+  save(STORAGE.equipment, [...syncedDefaults, ...customEquipment]);
 
   if (!localStorage.getItem(STORAGE.users)) {
     save(STORAGE.users, [{
@@ -171,9 +194,9 @@ function seedData() {
   } else {
     const existing = users();
 
-    let admin = existing.find(user =>
+    const admin = existing.find(user =>
       user.role === "admin" &&
-      user.email.toLowerCase() === "admin"
+      String(user.email).toLowerCase() === "admin"
     );
 
     if (!admin) {
@@ -185,18 +208,18 @@ function seedData() {
         role: "admin",
         createdAt: todayISO()
       });
+
+      setUsers(existing);
     } else {
       admin.name = "Admin Benarao";
+      setUsers(existing);
     }
-
-    setUsers(existing);
   }
 
   if (!localStorage.getItem(STORAGE.requests)) {
     save(STORAGE.requests, []);
   }
 }
-
 
 function findUserById(id) {
   return users().find(user => user.id === id);
@@ -272,14 +295,13 @@ function switchView(viewId) {
 
 function togglePasswordVisibility(inputId, button) {
   const input = document.getElementById(inputId);
-
   if (!input) return;
 
   const show = input.type === "password";
-
   input.type = show ? "text" : "password";
 
-  button.innerHTML = `<i class="fa-regular ${show ? "fa-eye-slash" : "fa-eye"}"></i>`;
+  button.innerHTML =
+    `<i class="fa-regular ${show ? "fa-eye-slash" : "fa-eye"}"></i>`;
 
   button.setAttribute(
     "aria-label",
@@ -310,7 +332,9 @@ function handleSignup(event) {
     return toast("Passwords do not match.", "error");
   }
 
-  if (users().some(user => user.email.toLowerCase() === email)) {
+  if (users().some(user =>
+    String(user.email).toLowerCase() === email
+  )) {
     return toast("An account with that email already exists.", "error");
   }
 
@@ -347,8 +371,8 @@ function handleLogin(event) {
 
   const user = users().find(entry =>
     (
-      entry.email.toLowerCase() === identifier ||
-      entry.name.toLowerCase() === identifier
+      String(entry.email).toLowerCase() === identifier ||
+      String(entry.name).toLowerCase() === identifier
     ) &&
     entry.password === password &&
     entry.role === selectedRole
@@ -382,7 +406,8 @@ function handleLogin(event) {
 
 function restoreSession() {
   const saved = safeParse(STORAGE.session, null);
-  const sessionId = saved?.userId || sessionStorage.getItem(STORAGE.session);
+  const sessionId =
+    saved?.userId || sessionStorage.getItem(STORAGE.session);
 
   if (!sessionId) return;
 
@@ -420,7 +445,6 @@ function renderUserDashboard() {
   if (!currentUser || currentUser.role === "admin") return;
 
   $("#userHeaderName").textContent = currentUser.name;
-
   $("#userHeaderRole").textContent =
     currentUser.role === "faculty" ? "Faculty / Staff" : "Student";
 
@@ -429,7 +453,6 @@ function renderUserDashboard() {
 
   $("#profileName").textContent = currentUser.name;
   $("#profileEmail").textContent = currentUser.email;
-
   $("#profileRole").textContent =
     currentUser.role === "faculty" ? "Faculty / Staff" : "Student";
 
@@ -684,7 +707,7 @@ function showUserSection(section) {
   });
 
   $$("[data-user-section]").forEach(link => {
-    link.closest("li").classList.toggle(
+    link.closest("li")?.classList.toggle(
       "active",
       link.dataset.userSection === section
     );
@@ -839,7 +862,7 @@ function showAdminSection(section) {
   });
 
   $$("[data-admin-section]").forEach(link => {
-    link.closest("li").classList.toggle(
+    link.closest("li")?.classList.toggle(
       "active",
       link.dataset.adminSection === section
     );
@@ -855,7 +878,6 @@ function showAdminSection(section) {
 
 function reviewRequest(id) {
   const req = requests().find(item => item.id === id);
-
   if (!req) return;
 
   currentRequestId = id;
@@ -970,7 +992,6 @@ function addEquipment(event) {
 
 function deleteEquipment(id) {
   const item = findEquipmentById(id);
-
   if (!item) return;
 
   if (requests().some(req =>
@@ -1238,11 +1259,10 @@ document.addEventListener("DOMContentLoaded", () => {
   $$("[data-user-section]").forEach(link => {
     link.addEventListener("click", event => {
       event.preventDefault();
-
       showUserSection(link.dataset.userSection);
 
       if (window.innerWidth <= 900) {
-        $("#userDashView .sidebar").classList.remove("mobile-open");
+        $("#userDashView .sidebar")?.classList.remove("mobile-open");
       }
     });
   });
@@ -1250,11 +1270,10 @@ document.addEventListener("DOMContentLoaded", () => {
   $$("[data-admin-section]").forEach(link => {
     link.addEventListener("click", event => {
       event.preventDefault();
-
       showAdminSection(link.dataset.adminSection);
 
       if (window.innerWidth <= 900) {
-        $("#adminDashView .sidebar").classList.remove("mobile-open");
+        $("#adminDashView .sidebar")?.classList.remove("mobile-open");
       }
     });
   });
@@ -1275,8 +1294,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $$(".menu-toggle").forEach(button => {
     button.addEventListener("click", () => {
-      const sidebar = button.closest(".dashboard-layout").querySelector(".sidebar");
-      sidebar.classList.toggle("mobile-open");
+      const sidebar = button.closest(".dashboard-layout")
+        ?.querySelector(".sidebar");
+
+      sidebar?.classList.toggle("mobile-open");
     });
   });
 
