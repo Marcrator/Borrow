@@ -153,6 +153,7 @@ function toast(message, type = "success") {
 
 /* INITIAL DATA */
 
+
 function seedData() {
   if (!localStorage.getItem(STORAGE.equipment)) {
     save(STORAGE.equipment, DEFAULT_EQUIPMENT);
@@ -161,7 +162,7 @@ function seedData() {
   if (!localStorage.getItem(STORAGE.users)) {
     save(STORAGE.users, [{
       id: "demo-admin",
-      name: "Admin Santos",
+      name: "Admin Benarao",
       email: "admin",
       password: "admin123",
       role: "admin",
@@ -170,22 +171,32 @@ function seedData() {
   } else {
     const existing = users();
 
-    if (!existing.some(user =>
+    let admin = existing.find(user =>
       user.role === "admin" &&
       user.email.toLowerCase() === "admin"
-    )) {
+    );
+
+    if (!admin) {
       existing.push({
         id: "demo-admin",
-        name: "Admin Santos",
+        name: "Admin Benarao",
         email: "admin",
         password: "admin123",
         role: "admin",
         createdAt: todayISO()
       });
-
-      setUsers(existing);
+    } else {
+      admin.name = "Admin Benarao";
     }
+
+    setUsers(existing);
   }
+
+  if (!localStorage.getItem(STORAGE.requests)) {
+    save(STORAGE.requests, []);
+  }
+}
+
 
   if (!localStorage.getItem(STORAGE.requests)) {
     save(STORAGE.requests, []);
